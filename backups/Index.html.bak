@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boutique Éphémère - Packs Ramadan & Aïd</title>
+    <meta name="description" content="Vente exclusive de packs pour le Ramadan et l'Aïd. Disponible en Belgique.">
+    <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">C.E.R.C.L.E. - E-boutique</div>
+        <a class="snipcart-checkout">
+            <span class="snipcart-items-count">0</span> articles - 
+            <span class="snipcart-total-price">0.00 €</span>
+        </a>
+    </header>
+
+    <section class="hero">
+        <h1>Packs Exclusifs Ramadan 2024</h1>
+        <p>Découvrez notre sélection de 10 packs uniques. Disponible en Belgique.</p>
+    </section>
+
+    <div class="container">
+        <main class="catalog">
+            <div class="product-grid">
+
+
+            <div class="product-card">
+                ... (backup truncated)

@@ -88,3 +88,32 @@
     }
   });
 })();
+
+/* Snipcart stock-check: mark out-of-stock products as "Épuisé" */
+function markOutOfStock(){
+  if(!(window.Snipcart && window.Snipcart.api && window.Snipcart.api.products)) return;
+  window.Snipcart.api.products.all().then(function(items){
+    items.forEach(function(item){
+      var out = false;
+      if(typeof item.stock !== 'undefined'){ if(item.stock === 0) out = true; }
+      else if(item.inventory && item.inventory.stock === 0) out = true;
+      if(out){
+        var selectors = [
+          '.snipcart-add-item[data-item-id="'+(item.id||'')+'"]',
+          '.snipcart-add-item[data-item-name="'+(item.name||'')+'"]'
+        ];
+        selectors.forEach(function(sel){
+          document.querySelectorAll(sel).forEach(function(b){
+            b.disabled = true; b.textContent = 'Épuisé'; b.classList.add('out-of-stock'); b.setAttribute('aria-disabled','true');
+          });
+        });
+      }
+    });
+  });
+}
+if(window.Snipcart && window.Snipcart.events){
+  window.Snipcart.events.on('snipcart.initialized', markOutOfStock);
+  window.Snipcart.events.on('cart.items.updated', markOutOfStock);
+  window.Snipcart.events.on('cart.closed', markOutOfStock);
+}
+document.addEventListener('DOMContentLoaded', function(){ setTimeout(markOutOfStock, 600); });
