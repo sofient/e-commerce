@@ -252,15 +252,28 @@
     <p>&copy; 2026 C.E.R.C.L.E. - E-boutique. <a href="privacy.html">Politique de Confidentialité</a></p>
   </footer>
 
-    <script>
-        window.SnipcartSettings = {
-            publicApiKey: "VOTRE_CLE_API_PUBLIQUE_ICI", // <-- REMPLACER CECI
-            loadStrategy: "on-user-interaction", // Optimisation vitesse
-            modalStyle: "side", // Panier latéral moderne
-        };
+<script>
+    window.SnipcartSettings = {
+        publicApiKey: "VOTRE_CLE_API_PUBLIQUE_ICI", // <-- REMETTRE VOTRE CLÉ
+        loadStrategy: "on-user-interaction",
+        modalStyle: "side",
+        
+        // C'est ici qu'on ajoute les champs personnalisés
+        orderCustomFields: [
+            {
+                name: "sexe",
+                options: "Homme|Femme",
+                type: "dropdown",
+                required: true,     // Force l'utilisateur à choisir
+                label: "Sexe (Civil)",
+                placeholder: "Sélectionnez votre sexe"
+            }
+        ]
+    };
+</script>
 
-        (function(){var c,d;(d=(c=window.SnipcartSettings).version)!=null||(c.version="3.0");var s,S;(S=(s=window.SnipcartSettings).timeoutDuration)!=null||(s.timeoutDuration=2750);var l,p;(p=(l=window.SnipcartSettings).domain)!=null||(l.domain="cdn.snipcart.com");var w,u;(u=(w=window.SnipcartSettings).protocol)!=null||(w.protocol="https");var m,g;(g=(m=window.SnipcartSettings).loadCSS)!=null||(m.loadCSS=!0);var y=window.SnipcartSettings.version.includes("v3.0.0-ci")||window.SnipcartSettings.version!="3.0"&&window.SnipcartSettings.version.localeCompare("3.4.0",void 0,{numeric:!0,sensitivity:"base"})===-1,f=["volume","amount"],h=["bil","cr_card","master_card","visa","discover","amex","jcb","diners_club","maestro","dayclub","rupay","ph_qr","alipay","wechat"];var b=d=>d.split("_").slice(1).join("-"),k=d=>d.split("_").slice(1).join(" "),v=d=>d.split("_").slice(1).join(""),n=(d,e)=>e in d?d[e]:d.em||d,q=(d,e)=>d[e]||d.em||d;function r(d,e){const a={...d};return a.publicApiKey=e,a}function t(d){var e=d.src,a=d.type||"text/javascript";return{test:o=>o.type===a&&o.src===e}}function i(d,e){var a=document.createElement("link");a.rel="stylesheet",a.type="text/css",a.href=e||`https://${p}/themes/v${d}/default/snipcart.css`,document.head.prepend(a)}function _(d,e){var a=document.createElement("script");return a.src=e||`https://${p}/themes/v${d}/default/snipcart.js`,a.async=!0,a.trigger="snipcart-script-done",a}function j(d,e){var a=document.createElement("div");return a.id="snipcart",a.setAttribute("hidden","true"),a.setAttribute("data-api-key",d),a.setAttribute("data-config-modal-style",e),a}function x(d,e){var a=document.createElement("script");return a.src=e||`https://${p}/themes/v${d}/default/snipcart.js`,a.async=!0,a}var z=(d,e)=>!d&&!e;function A(d,e){var a;return(a=e.events)!=null||(e.events=[]),a.forEach(o=>d.events.on(o.name,o.handler)),d}function B(d,e,a){var o=window.SnipcartSettings.publicApiKey;if(e.publicApiKey=o,z(d,e)){if(!a)return;a(0,o)}else if(d){if(a)return;a(0,o)}else{var E=_(e.version);E.onload=()=>{var c=window.Snipcart;c.events.on("snipcart.initialized",M=>{A(c,e),a&&a(c,o)}),B(c,e,a)},document.body.appendChild(E)}}function C(d,e){document.addEventListener("snipcart-script-done",()=>{var a=window.Snipcart;a.events.on("snipcart.initialized",o=>{A(a,e),d&&d(a)})})}function D(d){var e=window.SnipcartSettings,a=d||e.version,o=j(e.publicApiKey,e.modalStyle);e.loadCSS&&i(a),document.body.appendChild(o),B(window.Snipcart,e,n=>{n.events.on("snipcart.initialized",()=>{var E=window.SnipcartSettings.publicApiKey;window.Snipcart.api.session.setCurrency("eur")})})}document.addEventListener("DOMContentLoaded",()=>D());})();
-    </script>
+<script async src="https://cdn.snipcart.com/themes/v3.0.31/default/snipcart.js"></script>
+<div hidden id="snipcart" data-api-key="VOTRE_CLE_API_PUBLIQUE_ICI" data-config-modal-style="side"></div>
 
     <script src="js/site.js"></script>
 
