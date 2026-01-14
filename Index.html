@@ -261,27 +261,48 @@
   </footer>
 
 <script>
+    // Configuration Snipcart
     window.SnipcartSettings = {
-        publicApiKey: "VOTRE_CLE_API_PUBLIQUE_ICI", // <-- REMETTRE VOTRE CLÉ
+        publicApiKey: "YOUR_SNIPCART_PUBLIC_KEY", // TODO: Remplacer par votre clé Snipcart
         loadStrategy: "on-user-interaction",
         modalStyle: "side",
-        
-        // C'est ici qu'on ajoute les champs personnalisés
+        currency: "eur",
+
+        // Webhook endpoint pour validation des produits
+        fetchProductsUrl: "http://localhost:3000/api/v1/snipcart/products/{id}",
+
+        // Champs personnalisés dans le checkout
         orderCustomFields: [
             {
                 name: "sexe",
                 options: "Homme|Femme",
                 type: "dropdown",
-                required: true,     // Force l'utilisateur à choisir
+                required: true,
                 label: "Sexe (Civil)",
                 placeholder: "Sélectionnez votre sexe"
+            },
+            {
+                name: "message_cadeau",
+                type: "textarea",
+                required: false,
+                label: "Message cadeau (optionnel)",
+                placeholder: "Ajoutez un message personnalisé..."
             }
-        ]
+        ],
+
+        // Templating et personnalisation
+        templatesUrl: "/snipcart-templates.html",
+
+        // Webhooks pour notifications backend
+        webhooks: {
+            orderCompleted: "http://localhost:3000/api/v1/snipcart/webhooks",
+            shippingRatesFetch: "http://localhost:3000/api/v1/snipcart/webhooks"
+        }
     };
 </script>
 
-<script async src="https://cdn.snipcart.com/themes/v3.0.31/default/snipcart.js"></script>
-<div hidden id="snipcart" data-api-key="VOTRE_CLE_API_PUBLIQUE_ICI" data-config-modal-style="side"></div>
+<script async src="https://cdn.snipcart.com/themes/v3.7.1/default/snipcart.js"></script>
+<div hidden id="snipcart" data-api-key="YOUR_SNIPCART_PUBLIC_KEY" data-config-modal-style="side"></div>
 
     <script src="js/site.js"></script>
 
