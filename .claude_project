@@ -1,0 +1,42 @@
+# Claude Project Configuration - E-Commerce Site
+
+## Project Identity
+**Name:** Site Vente El Mouahidine
+**Type:** E-Commerce / Online Store
+**Domain:** Islamic Books & Products Sales
+**Tech Stack:** [À définir - Vue.js, React, ou autre]
+
+## Project Structure
+[Structure à définir selon vos besoins]
+
+## Key Features
+- Product catalog (Islamic books, religious items)
+- Shopping cart and checkout
+- Payment integration
+- Order management
+- User accounts
+- Product search and filtering
+- Categories and collections
+- Reviews and ratings
+
+## Important Context
+- This is the E-COMMERCE project - Online store for Islamic products
+- Primary language: French
+- Target: Selling Islamic books and religious items
+- Related to El Mouahidine organization
+
+## Differences with Nadi Project
+⚠️ **CRITICAL:** This is NOT the Nadi e-learning platform!
+- Nadi = Educational videos & courses (streaming)
+- Site Vente = Products & physical items (e-commerce)
+
+## When Working on This Project
+Always remember:
+1. This is an e-commerce store, NOT an e-learning platform
+2. Focus on products, cart, checkout, and orders
+3. Payment processing and inventory management
+4. Shipping and delivery features
+5. Product catalog and search functionality
+
+## Commands (to be defined)
+- [Development commands will be added when project is set up]
