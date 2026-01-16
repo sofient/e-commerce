@@ -1,4 +1,4 @@
-# 🛍️ C.E.R.C.L.E. - E-boutique
+# 🛍️ [STRANGERTHINGS] - E-boutique
 
 > Plateforme e-commerce moderne pour la vente de packs et coffrets cadeaux avec donation solidaire.
 
@@ -8,7 +8,7 @@
 
 ## 🎯 À propos
 
-C.E.R.C.L.E. E-boutique est une plateforme e-commerce qui vend des packs et coffrets cadeaux thématiques (enfants, adultes, éducatifs, Lego). **15% de chaque achat** est reversé à une association partenaire.
+[STRANGERTHINGS] E-boutique est une plateforme e-commerce qui vend des packs et coffrets cadeaux thématiques (enfants, adultes, éducatifs, Lego). **15% de chaque achat** est reversé à une association partenaire.
 
 ### ✨ Fonctionnalités
 
@@ -91,4 +91,4 @@ Voir [backend/README.md](backend/README.md) pour la documentation complète.
 
 ---
 
-**Fait avec ❤️ pour C.E.R.C.L.E. et la communauté**
+**Fait avec ❤️ pour [STRANGERTHINGS] et la communauté**

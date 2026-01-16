@@ -1,4 +1,4 @@
-# 📋 Résumé des Améliorations - C.E.R.C.L.E. E-boutique
+# 📋 Résumé des Améliorations - [STRANGERTHINGS] E-boutique
 
 ## ✅ Travail Réalisé
 
@@ -348,7 +348,7 @@ Carte test: `4242 4242 4242 4242`
 
 ## 🙏 Résumé Final
 
-**Projet: C.E.R.C.L.E. E-boutique**
+**Projet: [STRANGERTHINGS] E-boutique**
 
 ✅ **Design:** Style Apple Store moderne, responsive
 ✅ **Backend:** API complète, sécurisée, documentée

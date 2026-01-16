@@ -1,6 +1,6 @@
-# 🛍️ C.E.R.C.L.E. E-boutique - Backend API
+# 🛍️ [STRANGERTHINGS] E-boutique - Backend API
 
-Backend Node.js/Express pour la plateforme e-commerce C.E.R.C.L.E.
+Backend Node.js/Express pour la plateforme e-commerce [STRANGERTHINGS].
 
 ## 🚀 Démarrage rapide
 

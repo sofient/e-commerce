@@ -12,7 +12,7 @@ const logger = winston.createLogger({
     winston.format.splat(),
     winston.format.json()
   ),
-  defaultMeta: { service: 'cercle-ecommerce-api' },
+  defaultMeta: { service: '[STRANGERTHINGS]-ecommerce-api' },
   transports: [
     // Erreurs dans error.log
     new winston.transports.File({

@@ -1,7 +1,13 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat: Complete e-commerce platform with Apple Store design and full backend\n\nMajor Features:\n✨ Apple Store-inspired design \\(glassmorphism, SF Pro typography, smooth transitions\\)\n✨ Complete Node.js/Express backend API with MongoDB\n✨ JWT authentication \\(access + refresh tokens\\)\n✨ Snipcart integration with webhooks\n✨ Docker infrastructure \\(MongoDB, Redis, Backend\\)\n✨ Comprehensive documentation \\(6 markdown guides\\)\n\nFrontend Improvements:\n- Redesigned CSS with Apple design system\n- Responsive mobile-first layout\n- Glassmorphism header with backdrop-filter\n- Smooth transitions with cubic-bezier\n- Hover effects on cards and buttons\n- Improved Snipcart configuration\n\nBackend Architecture:\n- Models: User, Product, Order \\(Mongoose schemas\\)\n- Controllers: Authentication with JWT\n- Routes: Auth, Products, Orders, Snipcart webhooks\n- Middleware: Security \\(Helmet, CORS, rate limiting, sanitization\\)\n- Services: Logger \\(Winston\\), Database connection\n- Scripts: Seed database \\(10 products + 2 users\\)\n\nSecurity:\n- JWT authentication \\(15min access, 7d refresh\\)\n- Bcrypt password hashing \\(10 rounds\\)\n- Rate limiting \\(anti brute-force\\)\n- MongoDB sanitization \\(anti NoSQL injection\\)\n- CORS configuration\n- Helmet security headers\n\nInfrastructure:\n- Docker Compose \\(MongoDB, Redis, Backend, Mongo Express\\)\n- Dockerfile for backend\n- Environment configuration \\(.env.example\\)\n- Volume persistence\n\nDocumentation:\n- README.md - Main documentation\n- backend/README.md - Complete API guide\n- GETTING_STARTED.md - Detailed startup guide\n- QUICKSTART.md - 10-minute quick start\n- TEST_SCENARIO.md - 8 detailed test scenarios\n- ARCHITECTURE.md - Technical architecture\n- SUMMARY.md - Work summary\n- .gitignore - Ignore rules\n\nReady for development and deployment!\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push:*)",
+      "Bash(docker --version:*)",
+      "Bash(node --version:*)",
+      "Bash(npm:*)",
+      "Bash(git commit:*)"
     ]
   }
 }

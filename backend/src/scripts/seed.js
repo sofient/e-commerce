@@ -235,7 +235,7 @@ const users = [
     email: process.env.ADMIN_EMAIL || 'admin@cercle-eboutique.com',
     passwordHash: process.env.ADMIN_PASSWORD || 'Admin123!',
     firstName: 'Admin',
-    lastName: 'CERCLE',
+    lastName: '[STRANGERTHINGS]',
     role: 'admin',
     isVerified: true,
     permissions: ['manage_products', 'manage_orders', 'manage_users', 'view_analytics']

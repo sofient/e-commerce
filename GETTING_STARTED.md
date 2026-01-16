@@ -1,4 +1,4 @@
-# 🚀 Guide de démarrage - C.E.R.C.L.E. E-boutique
+# 🚀 Guide de démarrage - [STRANGERTHINGS] E-boutique
 
 ## 📋 Ce qui a été fait
 
@@ -105,7 +105,7 @@ npm run dev
 **Test:**
 ```bash
 curl http://localhost:3000/health
-# Réponse: {"success":true,"message":"API C.E.R.C.L.E. E-boutique - En ligne ✅"}
+# Réponse: {"success":true,"message":"API [STRANGERTHINGS] E-boutique - En ligne ✅"}
 ```
 
 ---

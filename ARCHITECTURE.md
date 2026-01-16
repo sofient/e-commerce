@@ -1,4 +1,4 @@
-# 🏗️ Architecture C.E.R.C.L.E. E-boutique
+# 🏗️ Architecture [STRANGERTHINGS] E-boutique
 
 ## 📊 Vue d'ensemble
 

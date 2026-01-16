@@ -6,12 +6,12 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: cercle-backend
+    container_name: strangerthings-backend
     ports:
       - "3000:3000"
     environment:
       NODE_ENV: development
-      MONGO_URI: mongodb://mongo:27017/cercle_ecommerce
+      MONGO_URI: mongodb://mongo:27017/strangerthings_ecommerce
       REDIS_URI: redis://redis:6379
       PORT: 3000
     env_file:
@@ -23,42 +23,42 @@ services:
       - ./backend:/app
       - /app/node_modules
     networks:
-      - cercle-network
+      - strangerthings-network
     restart: unless-stopped
     command: npm run dev
 
   # MongoDB Database
   mongo:
     image: mongo:7.0
-    container_name: cercle-mongo
+    container_name: strangerthings-mongo
     ports:
       - "27017:27017"
     environment:
-      MONGO_INITDB_DATABASE: cercle_ecommerce
+      MONGO_INITDB_DATABASE: strangerthings_ecommerce
     volumes:
       - mongo-data:/data/db
       - mongo-config:/data/configdb
     networks:
-      - cercle-network
+      - strangerthings-network
     restart: unless-stopped
 
   # Redis Cache
   redis:
     image: redis:7-alpine
-    container_name: cercle-redis
+    container_name: strangerthings-redis
     ports:
       - "6379:6379"
     volumes:
       - redis-data:/data
     networks:
-      - cercle-network
+      - strangerthings-network
     restart: unless-stopped
     command: redis-server --appendonly yes
 
   # Mongo Express (Admin UI - optionnel)
   mongo-express:
     image: mongo-express:latest
-    container_name: cercle-mongo-express
+    container_name: strangerthings-mongo-express
     ports:
       - "8081:8081"
     environment:
@@ -68,7 +68,7 @@ services:
     depends_on:
       - mongo
     networks:
-      - cercle-network
+      - strangerthings-network
     restart: unless-stopped
 
 volumes:
@@ -80,5 +80,5 @@ volumes:
     driver: local
 
 networks:
-  cercle-network:
+  strangerthings-network:
     driver: bridge

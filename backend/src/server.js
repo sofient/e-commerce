@@ -66,7 +66,7 @@ if (process.env.NODE_ENV === 'development') {
 app.get('/health', (req, res) => {
   res.json({
     success: true,
-    message: 'API C.E.R.C.L.E. E-boutique - En ligne ✅',
+    message: 'API [STRANGERTHINGS] E-boutique - En ligne ✅',
     environment: process.env.NODE_ENV,
     timestamp: new Date().toISOString()
   });
@@ -168,7 +168,7 @@ const server = app.listen(PORT, () => {
   logger.info(`
   ╔════════════════════════════════════════════════════════╗
   ║                                                        ║
-  ║   🚀 API C.E.R.C.L.E. E-boutique démarrée             ║
+  ║   🚀 API [STRANGERTHINGS] E-boutique démarrée             ║
   ║                                                        ║
   ║   📡 Environnement: ${process.env.NODE_ENV?.padEnd(33) || 'development'.padEnd(33)}║
   ║   🌐 Port: ${String(PORT).padEnd(43)}║

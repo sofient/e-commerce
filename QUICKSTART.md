@@ -130,7 +130,7 @@ npm run dev
 Vous devez voir:
 ```
 ╔════════════════════════════════════════════════════════╗
-║   🚀 API C.E.R.C.L.E. E-boutique démarrée             ║
+║   🚀 API [STRANGERTHINGS] E-boutique démarrée             ║
 ║   📍 URL: http://localhost:3000                       ║
 ╚════════════════════════════════════════════════════════╝
 ```
@@ -141,7 +141,7 @@ Réponse attendue:
 ```json
 {
   "success": true,
-  "message": "API C.E.R.C.L.E. E-boutique - En ligne ✅"
+  "message": "API [STRANGERTHINGS] E-boutique - En ligne ✅"
 }
 ```
 
