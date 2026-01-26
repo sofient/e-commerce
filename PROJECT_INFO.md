@@ -1,17 +1,17 @@
-# 🛒 SITE VENTE - E-Commerce El Mouahidine
+# 🛒 SITE VENTE - E-Commerce El test
 
 > **⚠️ IMPORTANT:** This is the E-COMMERCE project - Online store for Islamic products
 
 ## 🆔 Project Identity
 
-**Project Name:** Site Vente El Mouahidine
+**Project Name:** Site Vente El test
 **Domain:** E-Commerce / Islamic Products Store
 **Target Audience:** French-speaking Muslims
 **Languages:** French (primary) + Arabic (for product names)
 
 ## 🎯 Purpose
 
-An e-commerce platform for selling Islamic books, religious items, and educational products from El Mouahidine organization.
+An e-commerce platform for selling Islamic books, religious items, and educational products from El test organization.
 
 ## 📦 Product Categories (Expected)
 
@@ -56,7 +56,7 @@ An e-commerce platform for selling Islamic books, religious items, and education
 ## 🎨 Design System
 
 **Brand Colors:**
-- Primary: [To be defined - possibly matching El Mouahidine brand]
+- Primary: [To be defined - possibly matching El test brand]
 - Accent: [To be defined]
 - Neutral: Gray scale for text and backgrounds
 
@@ -150,10 +150,10 @@ Potential integrations with Nadi:
 
 ## 📞 Contact
 
-Part of the El Mouahidine ecosystem.
+Part of the El test ecosystem.
 
 ---
 
 **Status:** Planning / Not Yet Started
 **Related Project:** Nadi E-Learning Platform
-**Organization:** El Mouahidine
+**Organization:** El test

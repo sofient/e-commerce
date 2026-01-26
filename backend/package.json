@@ -1,7 +1,7 @@
 {
   "name": "cercle-ecommerce-backend",
   "version": "1.0.0",
-  "description": "Backend API pour [STRANGERTHINGS] E-boutique - El Mouahidine",
+  "description": "Backend API pour [STRANGERTHINGS] E-boutique - El test",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
@@ -12,7 +12,7 @@
     "seed": "node src/scripts/seed.js"
   },
   "keywords": ["ecommerce", "api", "nodejs", "express"],
-  "author": "El Mouahidine",
+  "author": "El test",
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.2",

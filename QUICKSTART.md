@@ -298,7 +298,7 @@ ls backend/.env
 
 ## 🆘 Support
 
-**Email:** contact@el-mouahidine.org
+**Email:** contact@el-test.org
 
 **Documentation:** Voir fichiers MD dans le projet
 

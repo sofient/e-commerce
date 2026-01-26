@@ -86,8 +86,8 @@ Voir [backend/README.md](backend/README.md) pour la documentation complète.
 
 ## 📞 Contact
 
-**Organisation:** El Mouahidine
-**Email:** contact@el-mouahidine.org
+**Organisation:** El test
+**Email:** contact@el-test.org
 
 ---
 
