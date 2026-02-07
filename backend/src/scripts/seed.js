@@ -273,9 +273,8 @@ const seedDatabase = async () => {
     }
     logger.info(`✅ ${users.length} utilisateurs insérés`);
 
-    logger.info('🎉 Seed terminé avec succès!');
-    logger.info('📧 Admin email:', users[0].email);
-    logger.info('🔑 Admin password:', process.env.ADMIN_PASSWORD || 'Admin123!');
+    logger.info('Seed termine avec succes!');
+    logger.info(`Admin email: ${users[0].email}`);
 
     process.exit(0);
 

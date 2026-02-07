@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const crypto = require('crypto');
+const https = require('https');
 const Product = require('../models/Product');
 const Order = require('../models/Order');
+const mongoose = require('mongoose');
 const logger = require('../utils/logger');
 
 /**
@@ -13,10 +14,10 @@ const logger = require('../utils/logger');
  */
 
 /**
- * Middleware: Vérifier signature Snipcart webhook
- * Snipcart envoie un header X-Snipcart-RequestToken
+ * Middleware: Vérifier le token Snipcart webhook via l'API de validation
+ * See: https://docs.snipcart.com/v3/webhooks/introduction
  */
-const verifySnipcartWebhook = (req, res, next) => {
+const verifySnipcartWebhook = async (req, res, next) => {
   const requestToken = req.headers['x-snipcart-requesttoken'];
 
   if (!requestToken) {
@@ -27,25 +28,34 @@ const verifySnipcartWebhook = (req, res, next) => {
   }
 
   try {
-    // Vérifier le token avec le secret Snipcart
-    const signature = crypto
-      .createHmac('sha256', process.env.SNIPCART_SECRET_KEY)
-      .update(requestToken)
-      .digest('hex');
+    const validationResult = await new Promise((resolve, reject) => {
+      const options = {
+        hostname: 'app.snipcart.com',
+        path: `/api/requestvalidation/${requestToken}`,
+        method: 'GET',
+        headers: { 'Accept': 'application/json' }
+      };
+      const request = https.request(options, (response) => {
+        let data = '';
+        response.on('data', chunk => { data += chunk; });
+        response.on('end', () => resolve({ statusCode: response.statusCode, body: data }));
+      });
+      request.on('error', reject);
+      request.end();
+    });
 
-    // Comparer avec le token envoyé
-    if (signature !== requestToken) {
-      logger.warn('⚠️  Tentative webhook Snipcart avec signature invalide');
+    if (validationResult.statusCode !== 200) {
+      logger.warn('Tentative webhook Snipcart avec token invalide');
       return res.status(403).json({
         success: false,
-        error: 'Signature invalide'
+        error: 'Token invalide'
       });
     }
 
     next();
 
   } catch (error) {
-    logger.error(`❌ Erreur vérification webhook Snipcart: ${error.message}`);
+    logger.error(`Erreur verification webhook Snipcart: ${error.message}`);
     res.status(500).json({
       success: false,
       error: 'Erreur de vérification'
@@ -103,22 +113,32 @@ router.post('/webhooks', express.json(), verifySnipcartWebhook, async (req, res)
  * Handler: Commande complétée
  */
 async function handleOrderCompleted(snipcartOrder) {
-  try {
-    logger.info(`✅ Commande Snipcart complétée: ${snipcartOrder.invoiceNumber}`);
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
-    // Créer la commande dans notre DB
-    const orderItems = snipcartOrder.items.map(item => ({
-      productId: item.id, // SKU ou ID produit
-      sku: item.id,
-      name: item.name,
-      price: item.price,
-      quantity: item.quantity,
-      subtotal: item.price * item.quantity
-    }));
+  try {
+    logger.info(`Commande Snipcart completee: ${snipcartOrder.invoiceNumber}`);
+
+    // Resolve product IDs by SKU before building order items
+    const skus = snipcartOrder.items.map(item => item.id.toUpperCase());
+    const products = await Product.find({ sku: { $in: skus } }).session(session);
+    const productBySku = new Map(products.map(p => [p.sku, p]));
+
+    const orderItems = snipcartOrder.items.map(item => {
+      const product = productBySku.get(item.id.toUpperCase());
+      return {
+        productId: product ? product._id : undefined,
+        sku: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        subtotal: item.price * item.quantity
+      };
+    });
 
     const order = new Order({
       orderNumber: snipcartOrder.invoiceNumber,
-      userId: null, // Snipcart ne gère pas l'auth utilisateur
+      userId: null,
       guestEmail: snipcartOrder.email,
       guestName: snipcartOrder.billingAddressName,
       items: orderItems,
@@ -149,21 +169,30 @@ async function handleOrderCompleted(snipcartOrder) {
       shippingCost: snipcartOrder.shippingInformationAmount
     });
 
-    await order.save();
+    await order.save({ session });
 
-    // Décrémenter stock
+    // Atomic stock decrement within the same transaction
     for (const item of orderItems) {
-      const product = await Product.findOne({ sku: item.sku });
-      if (product) {
-        await product.decrementStock(item.quantity);
+      if (!item.productId) continue;
+      const result = await Product.findOneAndUpdate(
+        { _id: item.productId, stock: { $gte: item.quantity } },
+        { $inc: { stock: -item.quantity, soldCount: item.quantity } },
+        { session }
+      );
+      if (!result) {
+        throw new Error(`Stock insuffisant pour ${item.name}`);
       }
     }
 
-    logger.info(`✅ Commande ${order.orderNumber} enregistrée en DB`);
+    await session.commitTransaction();
+    logger.info(`Commande ${order.orderNumber} enregistree en DB`);
 
   } catch (error) {
-    logger.error(`❌ Erreur handleOrderCompleted: ${error.message}`);
+    await session.abortTransaction();
+    logger.error(`Erreur handleOrderCompleted: ${error.message}`);
     throw error;
+  } finally {
+    session.endSession();
   }
 }
 

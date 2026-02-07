@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # Backend Node.js API
   backend:
@@ -11,14 +9,16 @@ services:
       - "3000:3000"
     environment:
       NODE_ENV: development
-      MONGO_URI: mongodb://mongo:27017/strangerthings_ecommerce
-      REDIS_URI: redis://redis:6379
+      MONGO_URI: mongodb://${MONGO_ROOT_USER:-strangerthings}:${MONGO_ROOT_PASSWORD:?Set MONGO_ROOT_PASSWORD in .env}@mongo:27017/strangerthings_ecommerce?authSource=admin
+      REDIS_URI: redis://:${REDIS_PASSWORD:?Set REDIS_PASSWORD in .env}@redis:6379
       PORT: 3000
     env_file:
       - ./backend/.env
     depends_on:
-      - mongo
-      - redis
+      mongo:
+        condition: service_started
+      redis:
+        condition: service_started
     volumes:
       - ./backend:/app
       - /app/node_modules
@@ -31,10 +31,11 @@ services:
   mongo:
     image: mongo:7.0
     container_name: strangerthings-mongo
-    ports:
-      - "27017:27017"
+    # Ports NOT exposed to host — accessible only within Docker network
     environment:
       MONGO_INITDB_DATABASE: strangerthings_ecommerce
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:-strangerthings}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:?Set MONGO_ROOT_PASSWORD in .env}
     volumes:
       - mongo-data:/data/db
       - mongo-config:/data/configdb
@@ -46,25 +47,26 @@ services:
   redis:
     image: redis:7-alpine
     container_name: strangerthings-redis
-    ports:
-      - "6379:6379"
+    # Ports NOT exposed to host — accessible only within Docker network
     volumes:
       - redis-data:/data
     networks:
       - strangerthings-network
     restart: unless-stopped
-    command: redis-server --appendonly yes
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:?Set REDIS_PASSWORD in .env}
 
-  # Mongo Express (Admin UI - optionnel)
+  # Mongo Express (Admin UI - development only, use: docker compose --profile dev up)
   mongo-express:
     image: mongo-express:latest
     container_name: strangerthings-mongo-express
+    profiles:
+      - dev
     ports:
       - "8081:8081"
     environment:
-      ME_CONFIG_MONGODB_URL: mongodb://mongo:27017/
-      ME_CONFIG_BASICAUTH_USERNAME: admin
-      ME_CONFIG_BASICAUTH_PASSWORD: admin123
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_ROOT_USER:-strangerthings}:${MONGO_ROOT_PASSWORD:?err}@mongo:27017/?authSource=admin
+      ME_CONFIG_BASICAUTH_USERNAME: ${ME_BASICAUTH_USER:?Set ME_BASICAUTH_USER in .env}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${ME_BASICAUTH_PASSWORD:?Set ME_BASICAUTH_PASSWORD in .env}
     depends_on:
       - mongo
     networks:

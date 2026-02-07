@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const Order = require('../models/Order');
 const Product = require('../models/Product');
 const { verifyToken, requireAdmin, optionalAuth } = require('../middleware/auth');
@@ -14,11 +15,16 @@ const logger = require('../utils/logger');
 // @desc    Créer une nouvelle commande
 // @access  Public (avec ou sans auth)
 router.post('/', optionalAuth, async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     const { items, shippingAddress, billingAddress, paymentMethod, couponCode, guestEmail, guestName } = req.body;
 
     // Validation
     if (!items || items.length === 0) {
+      await session.abortTransaction();
+      session.endSession();
       return res.status(400).json({
         success: false,
         error: 'Aucun article dans la commande'
@@ -26,18 +32,27 @@ router.post('/', optionalAuth, async (req, res) => {
     }
 
     if (!shippingAddress) {
+      await session.abortTransaction();
+      session.endSession();
       return res.status(400).json({
         success: false,
         error: 'Adresse de livraison requise'
       });
     }
 
-    // Vérifier stock et récupérer infos produits
+    // Batch-load all products in a single query
+    const productIds = items.map(item => item.productId);
+    const products = await Product.find({ _id: { $in: productIds } }).session(session);
+    const productMap = new Map(products.map(p => [p._id.toString(), p]));
+
+    // Verify stock and build order items
     const orderItems = [];
     for (const item of items) {
-      const product = await Product.findById(item.productId);
+      const product = productMap.get(item.productId);
 
       if (!product) {
+        await session.abortTransaction();
+        session.endSession();
         return res.status(404).json({
           success: false,
           error: `Produit ${item.productId} introuvable`
@@ -45,6 +60,8 @@ router.post('/', optionalAuth, async (req, res) => {
       }
 
       if (product.stock < item.quantity) {
+        await session.abortTransaction();
+        session.endSession();
         return res.status(400).json({
           success: false,
           error: `Stock insuffisant pour ${product.name}`
@@ -82,15 +99,24 @@ router.post('/', optionalAuth, async (req, res) => {
     // Calculer totaux
     order.calculateTotals();
 
-    await order.save();
+    await order.save({ session });
 
-    // Décrémenter stock des produits
+    // Atomic stock decrement within the transaction
     for (const item of orderItems) {
-      const product = await Product.findById(item.productId);
-      await product.decrementStock(item.quantity);
+      const result = await Product.findOneAndUpdate(
+        { _id: item.productId, stock: { $gte: item.quantity } },
+        { $inc: { stock: -item.quantity, soldCount: item.quantity } },
+        { session }
+      );
+      if (!result) {
+        throw new Error(`Stock insuffisant pour ${item.name} (concurrent update)`);
+      }
     }
 
-    logger.info(`✅ Nouvelle commande créée: ${orderNumber}`);
+    await session.commitTransaction();
+    session.endSession();
+
+    logger.info(`Nouvelle commande creee: ${orderNumber}`);
 
     res.status(201).json({
       success: true,
@@ -99,7 +125,9 @@ router.post('/', optionalAuth, async (req, res) => {
     });
 
   } catch (error) {
-    logger.error(`❌ Erreur création commande: ${error.message}`);
+    await session.abortTransaction();
+    session.endSession();
+    logger.error(`Erreur creation commande: ${error.message}`);
     res.status(500).json({
       success: false,
       error: 'Erreur lors de la création de la commande'
@@ -126,13 +154,15 @@ router.get('/', verifyToken, async (req, res) => {
       filter.orderStatus = status;
     }
 
-    // Pagination
-    const skip = (Number(page) - 1) * Number(limit);
+    // Validate pagination
+    const parsedPage = Math.max(1, parseInt(page, 10) || 1);
+    const parsedLimit = Math.min(100, Math.max(1, parseInt(limit, 10) || 20));
+    const skip = (parsedPage - 1) * parsedLimit;
 
     const orders = await Order.find(filter)
       .sort('-createdAt')
       .skip(skip)
-      .limit(Number(limit))
+      .limit(parsedLimit)
       .populate('userId', 'email firstName lastName')
       .select('-__v');
 
@@ -143,10 +173,10 @@ router.get('/', verifyToken, async (req, res) => {
       data: {
         orders,
         pagination: {
-          page: Number(page),
-          limit: Number(limit),
+          page: parsedPage,
+          limit: parsedLimit,
           total,
-          pages: Math.ceil(total / Number(limit))
+          pages: Math.ceil(total / parsedLimit)
         }
       }
     });
@@ -215,7 +245,7 @@ router.patch('/:id/status', verifyToken, requireAdmin, async (req, res) => {
     order.updateStatus(status, note, req.userId);
     await order.save();
 
-    logger.info(`✅ Commande ${order.orderNumber} - Statut: ${status}`);
+    logger.info(`Commande ${order.orderNumber} - Statut: ${status}`);
 
     res.json({
       success: true,

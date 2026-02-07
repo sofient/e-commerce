@@ -314,3 +314,4 @@ exports.getMe = async (req, res) => {
 };
 
 module.exports = exports;
+// Note: using exports.X pattern above, so module.exports = exports is needed to re-link

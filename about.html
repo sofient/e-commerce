@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://cdn.snipcart.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdn.snipcart.com">
     <title>Qui sommes-nous ? - [STRANGERTHINGS] E-boutique</title>
     <meta name="description" content="Découvrez [STRANGERTHINGS] - Notre mission et nos valeurs">
     <link rel="stylesheet" href="css/site.css">
@@ -140,16 +142,7 @@
     <p>&copy; 2026 [STRANGERTHINGS] - E-boutique. <a href="privacy.html">Politique de Confidentialité</a></p>
   </footer>
 
-<script>
-    window.SnipcartSettings = {
-        publicApiKey: "VOTRE_CLE_API_PUBLIQUE_ICI",
-        loadStrategy: "on-user-interaction",
-        modalStyle: "side"
-    };
-</script>
-
-<script async src="https://cdn.snipcart.com/themes/v3.0.31/default/snipcart.js"></script>
-<div hidden id="snipcart" data-api-key="VOTRE_CLE_API_PUBLIQUE_ICI" data-config-modal-style="side"></div>
+<script src="js/snipcart-loader.js" data-api-key="YOUR_SNIPCART_PUBLIC_API_KEY" defer></script>
 
 </body>
 </html>

@@ -23,8 +23,12 @@ const snipcartRoutes = require('./routes/snipcart');
 // Initialiser Express
 const app = express();
 
-// Connexion à MongoDB
-connectDB();
+// Trust proxy for correct req.ip and X-Forwarded-Proto behind reverse proxies
+app.set('trust proxy', 1);
+
+// Connexion à MongoDB (async, awaited in startup)
+const startServer = async () => {
+  await connectDB();
 
 // ============================
 // MIDDLEWARES GLOBAUX
@@ -162,35 +166,30 @@ app.use((err, req, res, next) => {
 // DÉMARRER LE SERVEUR
 // ============================
 
-const PORT = process.env.PORT || 3000;
+  const PORT = process.env.PORT || 3000;
 
-const server = app.listen(PORT, () => {
-  logger.info(`
-  ╔════════════════════════════════════════════════════════╗
-  ║                                                        ║
-  ║   🚀 API [STRANGERTHINGS] E-boutique démarrée             ║
-  ║                                                        ║
-  ║   📡 Environnement: ${process.env.NODE_ENV?.padEnd(33) || 'development'.padEnd(33)}║
-  ║   🌐 Port: ${String(PORT).padEnd(43)}║
-  ║   📍 URL: http://localhost:${PORT.toString().padEnd(27)}║
-  ║   🔐 CORS: ${(process.env.FRONTEND_URL || 'http://localhost:5173').padEnd(42)}║
-  ║                                                        ║
-  ╚════════════════════════════════════════════════════════╝
-  `);
-});
-
-// Graceful shutdown
-process.on('SIGTERM', () => {
-  logger.info('SIGTERM reçu. Arrêt gracieux du serveur...');
-  server.close(() => {
-    logger.info('Serveur fermé');
-    process.exit(0);
+  const server = app.listen(PORT, () => {
+    logger.info(`API [STRANGERTHINGS] demarree | env=${process.env.NODE_ENV || 'development'} | port=${PORT}`);
   });
-});
 
-process.on('unhandledRejection', (err) => {
-  logger.error(`❌ Unhandled Rejection: ${err.message}`);
-  server.close(() => process.exit(1));
+  // Graceful shutdown
+  process.on('SIGTERM', () => {
+    logger.info('SIGTERM recu. Arret gracieux du serveur...');
+    server.close(() => {
+      logger.info('Serveur ferme');
+      process.exit(0);
+    });
+  });
+
+  process.on('unhandledRejection', (err) => {
+    logger.error(`Unhandled Rejection: ${err.message}`);
+    server.close(() => process.exit(1));
+  });
+};
+
+startServer().catch(err => {
+  logger.error(`Erreur demarrage serveur: ${err.message}`);
+  process.exit(1);
 });
 
 module.exports = app;

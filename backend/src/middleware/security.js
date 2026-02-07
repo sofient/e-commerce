@@ -2,6 +2,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
 const cors = require('cors');
+const logger = require('../utils/logger');
 
 /**
  * Configuration Helmet - Protection contre attaques courantes
@@ -74,27 +75,31 @@ const corsOptions = {
 const sanitizeData = mongoSanitize({
   replaceWith: '_',
   onSanitize: ({ req, key }) => {
-    console.warn(`Tentative d'injection NoSQL détectée: ${key}`);
+    logger.warn(`Tentative d'injection NoSQL detectee: ${key}`);
   }
 });
 
 /**
  * Middleware HTTPS redirect (production uniquement)
+ * Supports reverse proxies via X-Forwarded-Proto header
  */
 const httpsRedirect = (req, res, next) => {
-  if (process.env.NODE_ENV === 'production' && !req.secure) {
-    return res.redirect(301, `https://${req.headers.host}${req.url}`);
+  if (process.env.NODE_ENV === 'production') {
+    const proto = req.headers['x-forwarded-proto'] || (req.secure ? 'https' : 'http');
+    if (proto !== 'https') {
+      return res.redirect(301, `https://${req.headers.host}${req.url}`);
+    }
   }
   next();
 };
 
 /**
  * Security headers personnalisés
+ * Note: X-XSS-Protection is intentionally omitted (obsolete, can introduce vulnerabilities)
  */
 const customSecurityHeaders = (req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'DENY');
-  res.setHeader('X-XSS-Protection', '1; mode=block');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
   next();

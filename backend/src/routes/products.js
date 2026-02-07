@@ -3,10 +3,62 @@ const router = express.Router();
 const Product = require('../models/Product');
 const { verifyToken, requireAdmin } = require('../middleware/auth');
 
+// Allowed sort fields to prevent MongoDB injection via sort parameter
+const ALLOWED_SORT_FIELDS = ['createdAt', 'price', 'name', 'soldCount', 'averageRating'];
+
+// Allowed fields for product creation/update (prevent mass assignment)
+const PRODUCT_FIELDS = [
+  'sku', 'name', 'slug', 'description', 'shortDescription',
+  'price', 'discountPrice', 'stock', 'lowStockThreshold', 'isAvailable',
+  'images', 'category', 'tags', 'weight', 'dimensions',
+  'metaTitle', 'metaDescription', 'donationEnabled', 'donationPercentage',
+  'isActive', 'isFeatured'
+];
+
+function pickFields(body, fields) {
+  const result = {};
+  for (const field of fields) {
+    if (body[field] !== undefined) {
+      result[field] = body[field];
+    }
+  }
+  return result;
+}
+
+function sanitizeSort(sortParam) {
+  if (!sortParam) return '-createdAt';
+  const direction = sortParam.startsWith('-') ? '-' : '';
+  const field = sortParam.replace(/^-/, '');
+  if (ALLOWED_SORT_FIELDS.includes(field)) return direction + field;
+  return '-createdAt';
+}
+
 /**
  * Routes Produits
  * Base: /api/v1/products
  */
+
+// Static routes MUST be defined before parameterized routes
+
+// @route   GET /api/v1/products/meta/categories
+// @desc    Obtenir la liste des catégories
+// @access  Public
+router.get('/meta/categories', async (req, res) => {
+  try {
+    const categories = await Product.distinct('category', { isActive: true });
+
+    res.json({
+      success: true,
+      data: { categories }
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Erreur lors de la récupération des catégories'
+    });
+  }
+});
 
 // @route   GET /api/v1/products
 // @desc    Obtenir tous les produits (avec filtres et pagination)
@@ -18,7 +70,7 @@ router.get('/', async (req, res) => {
       minPrice,
       maxPrice,
       search,
-      sort = '-createdAt',
+      sort,
       page = 1,
       limit = 20,
       inStock
@@ -46,14 +98,19 @@ router.get('/', async (req, res) => {
       filter.$text = { $search: search };
     }
 
-    // Pagination
-    const skip = (Number(page) - 1) * Number(limit);
+    // Validate pagination
+    const parsedPage = Math.max(1, parseInt(page, 10) || 1);
+    const parsedLimit = Math.min(100, Math.max(1, parseInt(limit, 10) || 20));
+    const skip = (parsedPage - 1) * parsedLimit;
+
+    // Sanitize sort
+    const safeSort = sanitizeSort(sort);
 
     // Query
     const products = await Product.find(filter)
-      .sort(sort)
+      .sort(safeSort)
       .skip(skip)
-      .limit(Number(limit))
+      .limit(parsedLimit)
       .select('-__v');
 
     const total = await Product.countDocuments(filter);
@@ -63,10 +120,10 @@ router.get('/', async (req, res) => {
       data: {
         products,
         pagination: {
-          page: Number(page),
-          limit: Number(limit),
+          page: parsedPage,
+          limit: parsedLimit,
           total,
-          pages: Math.ceil(total / Number(limit))
+          pages: Math.ceil(total / parsedLimit)
         }
       }
     });
@@ -79,7 +136,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// @route   GET /api/v1/products/:id
+// @route   GET /api/v1/products/:identifier
 // @desc    Obtenir un produit par ID ou slug
 // @access  Public
 router.get('/:identifier', async (req, res) => {
@@ -103,9 +160,8 @@ router.get('/:identifier', async (req, res) => {
       });
     }
 
-    // Incrémenter view count
-    product.viewCount += 1;
-    await product.save();
+    // Atomic viewCount increment (fire-and-forget)
+    Product.updateOne({ _id: product._id }, { $inc: { viewCount: 1 } }).catch(() => {});
 
     res.json({
       success: true,
@@ -125,7 +181,8 @@ router.get('/:identifier', async (req, res) => {
 // @access  Private (Admin)
 router.post('/', verifyToken, requireAdmin, async (req, res) => {
   try {
-    const product = new Product(req.body);
+    const data = pickFields(req.body, PRODUCT_FIELDS);
+    const product = new Product(data);
     await product.save();
 
     res.status(201).json({
@@ -147,9 +204,10 @@ router.post('/', verifyToken, requireAdmin, async (req, res) => {
 // @access  Private (Admin)
 router.put('/:id', verifyToken, requireAdmin, async (req, res) => {
   try {
+    const data = pickFields(req.body, PRODUCT_FIELDS);
     const product = await Product.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      data,
       { new: true, runValidators: true }
     );
 
@@ -201,26 +259,6 @@ router.delete('/:id', verifyToken, requireAdmin, async (req, res) => {
     res.status(400).json({
       success: false,
       error: error.message
-    });
-  }
-});
-
-// @route   GET /api/v1/products/categories/list
-// @desc    Obtenir la liste des catégories
-// @access  Public
-router.get('/meta/categories', async (req, res) => {
-  try {
-    const categories = await Product.distinct('category', { isActive: true });
-
-    res.json({
-      success: true,
-      data: { categories }
-    });
-
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: 'Erreur lors de la récupération des catégories'
     });
   }
 });
