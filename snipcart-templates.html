@@ -5,7 +5,7 @@
             <snipcart-label for="sexe" class="snipcart__font--tiny">
                 Sexe
             </snipcart-label>
-            <snipcart-select name="sexe" class="snipcart-form__select snipcart__font--secondary snipcart__font--bold">
+            <snipcart-select name="sexe" class="snipcart-form__select snipcart__font--secondary snipcart__font--bold" required>
                 <option value="">-- Sélectionnez --</option>
                 <option value="Homme">Homme</option>
                 <option value="Femme">Femme</option>
@@ -15,7 +15,7 @@
             <snipcart-label for="commentaire" class="snipcart__font--tiny">
                 Commentaire / Instructions spéciales
             </snipcart-label>
-            <snipcart-textarea name="commentaire" class="snipcart-form__input" placeholder="Laissez un message ou une instruction spéciale pour votre commande..."></snipcart-textarea>
+            <snipcart-textarea name="commentaire" class="snipcart-form__input" placeholder="Laissez un message ou une instruction spéciale pour votre commande..." maxlength="250"></snipcart-textarea>
         </div>
     </fieldset>
 </billing>
