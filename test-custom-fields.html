@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Custom Fields - Snipcart</title>
+    <link rel="preconnect" href="https://app.snipcart.com">
+    <link rel="preconnect" href="https://cdn.snipcart.com">
+    <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.0/default/snipcart.css" />
+    <style>
+        body { font-family: sans-serif; padding: 40px; max-width: 600px; margin: 0 auto; }
+        .product { border: 1px solid #ccc; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        .btn { background: #1a1a2e; color: white; padding: 12px 24px; border: none; cursor: pointer; font-size: 16px; }
+        .btn:hover { background: #16213e; }
+        h1 { color: #1a1a2e; }
+        .cart-btn { position: fixed; top: 20px; right: 20px; }
+    </style>
+</head>
+<body>
+
+    <h1>Test Snipcart Custom Fields</h1>
+
+    <button class="snipcart-checkout btn cart-btn">
+        Panier (<span class="snipcart-items-count">0</span>)
+    </button>
+
+    <div class="product">
+        <h2>Produit Test avec Custom Fields</h2>
+        <p>Prix: 19.99 EUR</p>
+        <p>Ce produit a 2 champs personnalisés:</p>
+        <ul>
+            <li><strong>Taille:</strong> dropdown avec Small, Medium, Large</li>
+            <li><strong>Couleur:</strong> dropdown avec Rouge, Bleu, Vert</li>
+        </ul>
+
+        <button class="snipcart-add-item btn"
+            data-item-id="test-product-1"
+            data-item-price="19.99"
+            data-item-url="https://sofient.github.io/e-commerce/test-custom-fields.html"
+            data-item-name="Produit Test"
+            data-item-description="Un produit de test avec custom fields"
+            data-item-custom1-name="Taille"
+            data-item-custom1-options="Small|Medium|Large"
+            data-item-custom1-value="Medium"
+            data-item-custom2-name="Couleur"
+            data-item-custom2-options="Rouge|Bleu|Vert"
+            data-item-custom2-value="Bleu">
+            Ajouter au panier
+        </button>
+    </div>
+
+    <div class="product">
+        <h2>Produit Test SANS Custom Fields</h2>
+        <p>Prix: 9.99 EUR</p>
+        <p>Ce produit n'a PAS de champs personnalisés.</p>
+
+        <button class="snipcart-add-item btn"
+            data-item-id="test-product-2"
+            data-item-price="9.99"
+            data-item-url="https://sofient.github.io/e-commerce/test-custom-fields.html"
+            data-item-name="Produit Simple"
+            data-item-description="Un produit simple sans options">
+            Ajouter au panier
+        </button>
+    </div>
+
+    <hr>
+    <p><strong>Instructions:</strong></p>
+    <ol>
+        <li>Cliquez sur "Ajouter au panier" pour le premier produit</li>
+        <li>Ouvrez le panier</li>
+        <li>Les champs "Taille" et "Couleur" devraient apparaitre sous le produit</li>
+    </ol>
+
+    <!-- Snipcart v3 - Installation standard -->
+    <script async src="https://cdn.snipcart.com/themes/v3.0/default/snipcart.js"></script>
+    <div hidden id="snipcart" data-api-key="YzNkN2VmYmUtNjZhMS00ODAyLTg1ODAtZjE4MDlmOGI5YzVlNjM5MDQxOTA1MjIzNzU4MTI1" data-config-modal-style="side"></div>
+
+</body>
+</html>
