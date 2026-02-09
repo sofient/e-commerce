@@ -111,31 +111,7 @@
       next.innerHTML = '&#8250;';
       wrapper.appendChild(next);
 
-      // Dots
-      var dots = document.createElement('div');
-      dots.className = 'carousel-dots';
-      slides.forEach(function(_, i){
-        var dot = document.createElement('button');
-        dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
-        dot.setAttribute('aria-label','Slide ' + (i+1));
-        dot.addEventListener('click', function(){ scrollToSlide(i); });
-        dots.appendChild(dot);
-      });
-      wrapper.parentNode.insertBefore(dots, wrapper.nextSibling);
-
-      function scrollToSlide(index){
-        var target = slides[index];
-        if(target) grid.scrollTo({ left: target.offsetLeft - grid.offsetLeft, behavior: 'smooth' });
-      }
-
-      function updateDots(){
-        var scrollLeft = grid.scrollLeft;
-        var width = grid.offsetWidth;
-        var index = Math.round(scrollLeft / width);
-        dots.querySelectorAll('.carousel-dot').forEach(function(d, i){
-          d.classList.toggle('active', i === index);
-        });
-      }
+      // Note: carousel navigation dots removed per request; only arrows remain.
 
       prev.addEventListener('click', function(){
         grid.scrollBy({ left: -grid.offsetWidth, behavior: 'smooth' });
@@ -144,7 +120,8 @@
         grid.scrollBy({ left: grid.offsetWidth, behavior: 'smooth' });
       });
 
-      grid.addEventListener('scroll', updateDots, {passive:true});
+      // Keep basic scroll handler in case we add behavior later
+      grid.addEventListener('scroll', function () {}, {passive:true});
     });
   });
 })();
