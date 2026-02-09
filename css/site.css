@@ -294,6 +294,94 @@ header {
 .product-details { margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #eee; }
 .product-details ul { padding-left: 1.2rem; margin-top: 1rem; color: var(--text-muted); }
 
+/* --- Product Gallery Carousel --- */
+.product-gallery {
+    margin-top: 2.5rem;
+    background: var(--card-bg);
+    padding: 2.5rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+.product-gallery > h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+    letter-spacing: -0.01em;
+}
+.carousel-wrapper {
+    position: relative;
+}
+.gallery-grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 1rem;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+.gallery-grid::-webkit-scrollbar { display: none; }
+.gallery-grid img {
+    flex: 0 0 100%;
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    scroll-snap-align: center;
+    object-fit: cover;
+    aspect-ratio: 4/3;
+}
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-md);
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s var(--transition-smooth);
+    z-index: 2;
+}
+.carousel-btn:hover {
+    background: white;
+    transform: translateY(-50%) scale(1.1);
+}
+.carousel-btn.prev { left: -12px; }
+.carousel-btn.next { right: -12px; }
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 1rem;
+}
+.carousel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: none;
+    background: #d1d5db;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.2s var(--transition-smooth);
+}
+.carousel-dot.active {
+    background: var(--accent-color);
+    transform: scale(1.3);
+}
+.product-video {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+}
+
 /* --- Donation Badge (Apple Card Style) --- */
 .donation-card {
     margin-top: 3rem;

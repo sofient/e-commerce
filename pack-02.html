@@ -3,15 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pack 02 — Enfant (Fille) • [STRANGERTHINGS] - E-boutique</title>
+    <title>Pack 02 — Enfant (Fille) • Mahall - E-boutique</title>
     <meta name="description" content="Pack 02 - Enfant (Fille) — coffret pour fille avec petits jouets et gourmandises.">
     <link rel="stylesheet" href="css/site.css">
 </head>
 <body>
     <header>
-        <div class="logo">[STRANGERTHINGS] - E-boutique</div>
+        <div class="logo"><a href="index.html">Mahall - E-boutique</a></div>
+        <nav class="nav-menu">
+            <a href="index.html" class="nav-link">Accueil</a>
+            <a href="index.html#products" class="nav-link">Produits</a>
+            <a href="about.html" class="nav-link">Qui sommes-nous ?</a>
+            <a href="faq.html" class="nav-link">F.A.Q.</a>
+        </nav>
         <a class="snipcart-checkout">
-            <span class="snipcart-items-count">0</span> 
+            <span class="snipcart-items-count">0</span>
             <span class="snipcart-total-price">0.00 €</span>
         </a>
     </header>
@@ -41,16 +47,16 @@
                         data-item-weight="800"
                         data-item-custom1-name="Destination"
                         data-item-custom1-type="dropdown"
-                        data-item-custom1-options="Pour moi (livraison)|Don à une association (ne pas livrer)"
-                        data-item-custom1-value="Pour moi (livraison)"
+                        data-item-custom1-options="Pour moi|Pour une action/association"
+                        data-item-custom1-value="Pour moi"
                         data-item-custom1-required="true"
                         data-item-custom2-name="Association bénéficiaire"
                         data-item-custom2-type="dropdown"
-                        data-item-custom2-options="Secours Islamique France|Secours Populaire|Restos du Coeur|Croissant Rouge|Muslim Hands|Islamic Relief|Life ONG|Barakacity|Human Appeal|Autre association locale"
+                        data-item-custom2-options="-|Secours Islamique France|Secours Populaire|Restos du Coeur|Croissant Rouge|Muslim Hands|Islamic Relief|Life ONG|Barakacity|Human Appeal|Autre association locale"
                         data-item-custom2-required="false"> Ajouter au panier
                     </button>
 
-                    <p class="small-muted" style="margin-top:1rem;">15% du prix est reversé à une association à but non lucratif.</p>
+                    <p class="small-muted" style="margin-top:1rem;">Les bénéfices serviront au remboursement des dettes et à la rénovation du bâtiment.</p>
 
                     <div class="product-details">
                         <h3>Contenu du pack</h3>
@@ -63,18 +69,31 @@
                     </div>
                 </div>
             </div>
+
+            <div class="product-gallery">
+                <h3>Photos du produit</h3>
+                <div class="gallery-grid">
+                    <img src="https://placehold.co/300x300/ffb6c1/ffffff?text=Photo+1" alt="Pack 02 - Photo 1">
+                    <img src="https://placehold.co/300x300/ffb6c1/ffffff?text=Photo+2" alt="Pack 02 - Photo 2">
+                    <img src="https://placehold.co/300x300/ffb6c1/ffffff?text=Photo+3" alt="Pack 02 - Photo 3">
+                </div>
+                <div class="product-video">
+                    <h3>Vidéo de présentation</h3>
+                    <p class="small-muted">Vidéo à venir prochainement.</p>
+                </div>
+            </div>
         </main>
 
         <aside class="donation">
             <div class="donation-card">
-                <h4>15% reversé à une association</h4>
-                <p>Nous reversons <strong>15%</strong> de chaque achat à une association à but non lucratif. <a href="#" target="_blank" rel="noopener">En savoir plus</a></p>
+                <h4>Notre engagement</h4>
+                <p>Les bénéfices de chaque achat serviront au <strong>remboursement des dettes et à la rénovation du bâtiment</strong>. <a href="about.html">En savoir plus</a></p>
             </div>
         </aside>
     </div>
 
     <footer>
-        <p>&copy; 2026 [STRANGERTHINGS] - E-boutique.</p>
+        <p>&copy; 2026 Mahall - E-boutique.</p>
     </footer>
 
     <script src="js/snipcart-init.js"></script>
