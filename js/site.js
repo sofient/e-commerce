@@ -87,10 +87,10 @@
       });
     }
 
-    // Gallery Carousel
+    // Gallery Carousel (treat images and video slides as slides)
     document.querySelectorAll('.gallery-grid').forEach(function(grid){
-      var images = grid.querySelectorAll('img');
-      if(images.length < 2) return;
+      var slides = grid.querySelectorAll('img, .carousel-video-slide');
+      if(slides.length < 2) return;
 
       // Wrap in carousel-wrapper
       var wrapper = document.createElement('div');
@@ -114,17 +114,17 @@
       // Dots
       var dots = document.createElement('div');
       dots.className = 'carousel-dots';
-      images.forEach(function(_, i){
+      slides.forEach(function(_, i){
         var dot = document.createElement('button');
         dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
-        dot.setAttribute('aria-label','Photo ' + (i+1));
+        dot.setAttribute('aria-label','Slide ' + (i+1));
         dot.addEventListener('click', function(){ scrollToSlide(i); });
         dots.appendChild(dot);
       });
       wrapper.parentNode.insertBefore(dots, wrapper.nextSibling);
 
       function scrollToSlide(index){
-        var target = images[index];
+        var target = slides[index];
         if(target) grid.scrollTo({ left: target.offsetLeft - grid.offsetLeft, behavior: 'smooth' });
       }
 
