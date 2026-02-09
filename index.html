@@ -27,7 +27,7 @@
 
   <section class="hero">
     <h1>Packs Exclusifs — Édition Limitée</h1>
-    <p>Des coffrets soigneusement sélectionnés pour partager et offrir. <strong>15%</strong> reversés à une association partenaire.</p>
+    <p>Des coffrets soigneusement sélectionnés pour partager et offrir. <strong>Bénéfices serviront au batiment</strong></p>
   </section>
 
     <div class="container" id="products">
@@ -350,97 +350,7 @@
     <p>&copy; 2026 [STRANGERTHINGS] - E-boutique. <a href="privacy.html">Politique de Confidentialité</a></p>
   </footer>
 
-<!-- Snipcart v3 - Installation standard -->
-<link rel="preconnect" href="https://app.snipcart.com">
-<link rel="preconnect" href="https://cdn.snipcart.com">
-<link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.0/default/snipcart.css" />
-<script async src="https://cdn.snipcart.com/themes/v3.0/default/snipcart.js"></script>
-<div hidden id="snipcart"
-    data-api-key="YzNkN2VmYmUtNjZhMS00ODAyLTg1ODAtZjE4MDlmOGI5YzVlNjM5MDQxOTA1MjIzNzU4MTI1"
-    data-config-modal-style="side"
-    data-currency="eur"
-    data-templates-url="https://sofient.github.io/e-commerce/snipcart-templates.html"></div>
-
-<script>
-    // Script pour gérer la logique conditionnelle Destination → Association
-    // Quand "Pour moi" est sélectionné, le champ "Association bénéficiaire" est grisé
-    document.addEventListener('DOMContentLoaded', function() {
-        // Observer les changements dans le panier Snipcart
-        const observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-                if (mutation.addedNodes.length) {
-                    initDestinationLogic();
-                }
-            });
-        });
-
-        // Observer le body pour détecter quand Snipcart charge
-        observer.observe(document.body, { childList: true, subtree: true });
-
-        function initDestinationLogic() {
-            // Trouver tous les selects "Destination"
-            const destinationSelects = document.querySelectorAll('select[name*="Destination"], select[data-custom-field-name="Destination"]');
-
-            destinationSelects.forEach(function(select) {
-                // Trouver le select "Association" correspondant (dans le même item)
-                const itemContainer = select.closest('.snipcart-item-line, .snipcart-cart-item, [class*="item"]');
-                if (!itemContainer) return;
-
-                const associationSelect = itemContainer.querySelector('select[name*="Association"], select[data-custom-field-name*="Association"]');
-                if (!associationSelect) return;
-
-                // Fonction pour mettre à jour l'état du champ Association
-                function updateAssociationState() {
-                    const isDonation = select.value.toLowerCase().includes('don') ||
-                                       select.value.toLowerCase().includes('association');
-
-                    if (isDonation) {
-                        // Activer le champ Association
-                        associationSelect.disabled = false;
-                        associationSelect.style.opacity = '1';
-                        associationSelect.style.cursor = 'pointer';
-                        associationSelect.parentElement?.classList?.remove('disabled');
-                    } else {
-                        // Désactiver/griser le champ Association
-                        associationSelect.disabled = true;
-                        associationSelect.style.opacity = '0.4';
-                        associationSelect.style.cursor = 'not-allowed';
-                        associationSelect.value = ''; // Réinitialiser la sélection
-                        associationSelect.parentElement?.classList?.add('disabled');
-                    }
-                }
-
-                // Appliquer l'état initial
-                updateAssociationState();
-
-                // Écouter les changements
-                select.addEventListener('change', updateAssociationState);
-            });
-        }
-
-        // Écouter les événements Snipcart pour réinitialiser la logique
-        if (typeof Snipcart !== 'undefined') {
-            Snipcart.events.on('cart.ready', initDestinationLogic);
-            Snipcart.events.on('item.added', initDestinationLogic);
-            Snipcart.events.on('item.updated', initDestinationLogic);
-        }
-    });
-</script>
-
-<style>
-    /* Style pour le champ Association grisé */
-    .snipcart select[disabled],
-    .snipcart .disabled select {
-        opacity: 0.4 !important;
-        cursor: not-allowed !important;
-        background-color: #f0f0f0 !important;
-    }
-
-    .snipcart .disabled label {
-        opacity: 0.5;
-    }
-</style>
-
+    <script src="js/snipcart-init.js"></script>
     <script src="js/site.js"></script>
 
 </body>
