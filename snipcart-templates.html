@@ -7,6 +7,23 @@
 </head>
 <body>
     <div id="snipcart-templates">
+        <cart section="header">
+            <div class="snipcart-cart-header">
+                <div class="snipcart-cart-header__title snipcart__font--black">{{ $localize('cart.title') }}</div>
+                <close-cart-action class="snipcart-modal__close" icon="close"></close-cart-action>
+            </div>
+            <div class="snipcart-form__set">
+                <div class="snipcart-form__field">
+                    <snipcart-label for="commentaire_panier" class="snipcart__font--tiny">Commentaire sur votre achat</snipcart-label>
+                    <snipcart-textarea
+                        name="commentaire_panier"
+                        maxlength="255"
+                        class="snipcart-form__input"
+                        placeholder="Dites-nous si cet achat est pour vous ou pour quelqu'un d'autre"></snipcart-textarea>
+                </div>
+            </div>
+        </cart>
+
         <address-fields section="top">
             <fieldset class="snipcart-form__set">
                 <div class="snipcart-form__field">
