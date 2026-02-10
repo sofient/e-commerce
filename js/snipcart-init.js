@@ -1,86 +1,178 @@
-// Snipcart v3 — Configuration centralisée
-// Un seul fichier à modifier pour changer la clé API, devise, templates, etc.
+// Snipcart v3 centralized setup using the recommended SnipcartSettings object.
 (function () {
-  var CONFIG = {
-    apiKey: 'YzNkN2VmYmUtNjZhMS00ODAyLTg1ODAtZjE4MDlmOGI5YzVlNjM5MDQxOTA1MjIzNzU4MTI1',
+  var DEFAULT_CONFIG = {
+    publicApiKey: 'YzNkN2VmYmUtNjZhMS00ODAyLTg1ODAtZjE4MDlmOGI5YzVlNjM5MDQxOTA1MjIzNzU4MTI1',
     currency: 'eur',
     modalStyle: 'side',
-    templatesUrl: 'https://sofient.github.io/e-commerce/snipcart-templates.html'
+    templatesUrl: 'https://sofient.github.io/e-commerce/snipcart-templates.html',
+    loadStrategy: 'on-user-interaction',
+    version: '3.0'
   };
 
-  var CDN = 'https://cdn.snipcart.com/themes/v3.0/default';
-  var head = document.head;
+  window.SnipcartSettings = window.SnipcartSettings || {};
 
-  // Preconnect
-  ['https://app.snipcart.com', 'https://cdn.snipcart.com'].forEach(function (url) {
-    var link = document.createElement('link');
-    link.rel = 'preconnect';
-    link.href = url;
-    head.appendChild(link);
+  Object.keys(DEFAULT_CONFIG).forEach(function (key) {
+    if (window.SnipcartSettings[key] === undefined || window.SnipcartSettings[key] === null) {
+      window.SnipcartSettings[key] = DEFAULT_CONFIG[key];
+    }
   });
 
-  // CSS
-  var css = document.createElement('link');
-  css.rel = 'stylesheet';
-  css.href = CDN + '/snipcart.css';
-  head.appendChild(css);
+  // Loader aligned with Snipcart's installation pattern.
+  (function bootstrapSnipcart() {
+    var settings = window.SnipcartSettings;
+    if (!settings.version) settings.version = '3.0';
+    if (!settings.timeoutDuration) settings.timeoutDuration = 2750;
+    if (!settings.domain) settings.domain = 'cdn.snipcart.com';
+    if (!settings.protocol) settings.protocol = 'https';
+    if (typeof settings.loadCSS === 'undefined') settings.loadCSS = true;
 
-  // JS
-  var js = document.createElement('script');
-  js.src = CDN + '/snipcart.js';
-  js.async = true;
-  head.appendChild(js);
+    var usesLegacyDataAttributes =
+      settings.version.indexOf('v3.0.0-ci') !== -1 ||
+      (settings.version !== '3.0' &&
+        settings.version.localeCompare('3.4.0', undefined, {
+          numeric: true,
+          sensitivity: 'base'
+        }) === -1);
 
-  // #snipcart div
-  var div = document.createElement('div');
-  div.id = 'snipcart';
-  div.hidden = true;
-  div.setAttribute('data-api-key', CONFIG.apiKey);
-  div.setAttribute('data-config-modal-style', CONFIG.modalStyle);
-  div.setAttribute('data-currency', CONFIG.currency);
-  if (CONFIG.templatesUrl) {
-    div.setAttribute('data-templates-url', CONFIG.templatesUrl);
-  }
-  document.body.appendChild(div);
+    var events = ['focus', 'mouseover', 'touchmove', 'scroll', 'keydown'];
+    var hasLoaded = false;
 
-  // Logique conditionnelle Destination → Association
+    window.LoadSnipcart = loadSnipcart;
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initLoadStrategy);
+    } else {
+      initLoadStrategy();
+    }
+
+    function initLoadStrategy() {
+      if (!settings.loadStrategy) {
+        loadSnipcart();
+        return;
+      }
+
+      if (settings.loadStrategy === 'on-user-interaction') {
+        events.forEach(function (eventName) {
+          document.addEventListener(eventName, loadSnipcart, { passive: true });
+        });
+        setTimeout(loadSnipcart, settings.timeoutDuration);
+        return;
+      }
+
+      if (settings.loadStrategy === 'manual') {
+        return;
+      }
+
+      loadSnipcart();
+    }
+
+    function loadSnipcart() {
+      if (hasLoaded) return;
+      hasLoaded = true;
+
+      var protocol = settings.protocol + '://';
+      var base = protocol + settings.domain;
+      var scriptPath = '/themes/v' + settings.version + '/default/snipcart.js';
+      var stylePath = '/themes/v' + settings.version + '/default/snipcart.css';
+
+      var head = document.head || document.getElementsByTagName('head')[0];
+      var snipcartNode = document.querySelector('#snipcart');
+      var scriptSelector = 'script[src="' + base + scriptPath + '"]';
+      var styleSelector = 'link[href="' + base + stylePath + '"]';
+      var scriptTag = document.querySelector(scriptSelector);
+      var styleTag = document.querySelector(styleSelector);
+
+      if (!snipcartNode) {
+        snipcartNode = document.createElement('div');
+        snipcartNode.id = 'snipcart';
+        snipcartNode.setAttribute('hidden', 'true');
+        document.body.appendChild(snipcartNode);
+      }
+
+      if (usesLegacyDataAttributes) {
+        snipcartNode.dataset.apiKey = settings.publicApiKey;
+
+        if (settings.addProductBehavior) {
+          snipcartNode.dataset.configAddProductBehavior = settings.addProductBehavior;
+        }
+
+        if (settings.modalStyle) {
+          snipcartNode.dataset.configModalStyle = settings.modalStyle;
+        }
+
+        if (settings.currency) {
+          snipcartNode.dataset.currency = settings.currency;
+        }
+
+        if (settings.templatesUrl) {
+          snipcartNode.dataset.templatesUrl = settings.templatesUrl;
+        }
+      }
+
+      if (!scriptTag) {
+        scriptTag = document.createElement('script');
+        scriptTag.src = base + scriptPath;
+        scriptTag.async = true;
+        head.appendChild(scriptTag);
+      }
+
+      if (!styleTag && settings.loadCSS) {
+        styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.type = 'text/css';
+        styleTag.href = base + stylePath;
+        head.prepend(styleTag);
+      }
+
+      events.forEach(function (eventName) {
+        document.removeEventListener(eventName, loadSnipcart);
+      });
+    }
+  })();
+
+  // Conditional logic: Destination -> Association beneficiary.
   function initDestinationLogic() {
-    var selects = document.querySelectorAll(
+    var destinationSelects = document.querySelectorAll(
       'select[name*="Destination"], select[data-custom-field-name="Destination"]'
     );
 
-    selects.forEach(function (select) {
-      var container = select.closest(
+    destinationSelects.forEach(function (destinationSelect) {
+      var container = destinationSelect.closest(
         '.snipcart-item-line, .snipcart-cart-item, [class*="item"]'
       );
       if (!container) return;
 
-      var assocSelect = container.querySelector(
+      var associationSelect = container.querySelector(
         'select[name*="Association"], select[data-custom-field-name*="Association"]'
       );
-      if (!assocSelect) return;
+      if (!associationSelect) return;
 
-      function update() {
-        var isDon =
-          select.value.toLowerCase().includes('don') ||
-          select.value.toLowerCase().includes('association');
+      function updateAssociationState() {
+        var normalizedValue = destinationSelect.value.toLowerCase();
+        var isDonation =
+          normalizedValue.indexOf('don') !== -1 || normalizedValue.indexOf('association') !== -1;
 
-        assocSelect.disabled = !isDon;
-        assocSelect.style.opacity = isDon ? '1' : '0.4';
-        assocSelect.style.cursor = isDon ? 'pointer' : 'not-allowed';
-        if (!isDon) assocSelect.value = '';
+        associationSelect.disabled = !isDonation;
+        associationSelect.style.opacity = isDonation ? '1' : '0.4';
+        associationSelect.style.cursor = isDonation ? 'pointer' : 'not-allowed';
+
+        if (!isDonation) {
+          associationSelect.value = '';
+        }
       }
 
-      update();
-      select.addEventListener('change', update);
+      updateAssociationState();
+      destinationSelect.addEventListener('change', updateAssociationState);
     });
   }
 
-  // Observer le DOM pour détecter les éléments Snipcart
   var observer = new MutationObserver(function (mutations) {
-    mutations.forEach(function (m) {
-      if (m.addedNodes.length) initDestinationLogic();
+    mutations.forEach(function (mutation) {
+      if (mutation.addedNodes.length) {
+        initDestinationLogic();
+      }
     });
   });
+
   observer.observe(document.body, { childList: true, subtree: true });
 })();
