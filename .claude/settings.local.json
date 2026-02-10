@@ -7,7 +7,15 @@
       "Bash(docker --version:*)",
       "Bash(node --version:*)",
       "Bash(npm:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "WebFetch(domain:support.snipcart.com)",
+      "WebFetch(domain:sofient.github.io)",
+      "Bash(git mv:*)",
+      "WebFetch(domain:docs.snipcart.com)",
+      "WebFetch(domain:forum.getkirby.com)",
+      "Bash(powershell -ExecutionPolicy Bypass -File:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(git rm:*)"
     ]
   }
 }
