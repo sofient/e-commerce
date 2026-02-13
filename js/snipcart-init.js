@@ -1,142 +1,78 @@
-// Snipcart v3 centralized setup using the recommended SnipcartSettings object.
+// Snipcart v3 — official installation pattern from docs.snipcart.com/v3/setup/installation
+window.SnipcartSettings = {
+  publicApiKey: 'YzNkN2VmYmUtNjZhMS00ODAyLTg1ODAtZjE4MDlmOGI5YzVlNjM5MDQxOTA1MjIzNzU4MTI1',
+  loadStrategy: 'on-user-interaction',
+  currency: 'eur',
+  modalStyle: 'side',
+  templatesUrl: 'https://sofient.github.io/e-commerce/snipcart-templates.html'
+};
+
+// Official Snipcart bootstrap (minified from docs)
+(function(){
+  var c,d;(d=(c=window.SnipcartSettings).version)!=null||(c.version="3.0");
+  var s,S;(S=(s=window.SnipcartSettings).timeoutDuration)!=null||(s.timeoutDuration=2750);
+  var l,p;(p=(l=window.SnipcartSettings).domain)!=null||(l.domain="cdn.snipcart.com");
+  var w,u;(u=(w=window.SnipcartSettings).protocol)!=null||(w.protocol="https");
+  var m,g;(g=(m=window.SnipcartSettings).loadCSS)!=null||(m.loadCSS=!0);
+
+  var y=window.SnipcartSettings.version.includes("v3.0.0-ci")||
+    window.SnipcartSettings.version!="3.0"&&
+    window.SnipcartSettings.version.localeCompare("3.4.0",void 0,{numeric:!0,sensitivity:"base"})===-1;
+
+  var f=["focus","mouseover","touchmove","scroll","keydown"];
+  window.LoadSnipcart=o;
+  document.readyState==="loading"?document.addEventListener("DOMContentLoaded",r):r();
+
+  function r(){
+    window.SnipcartSettings.loadStrategy
+      ? window.SnipcartSettings.loadStrategy==="on-user-interaction"&&(
+          f.forEach(function(t){return document.addEventListener(t,o)}),
+          setTimeout(o,window.SnipcartSettings.timeoutDuration))
+      : o();
+  }
+
+  var a=!1;
+  function o(){
+    if(a)return;a=!0;
+    var t=document.getElementsByTagName("head")[0],
+        n=document.querySelector("#snipcart"),
+        i=document.querySelector('script[src^="'+window.SnipcartSettings.protocol+"://"+window.SnipcartSettings.domain+'"][src$="snipcart.js"]'),
+        e=document.querySelector('link[href^="'+window.SnipcartSettings.protocol+"://"+window.SnipcartSettings.domain+'"][href$="snipcart.css"]');
+
+    n||(n=document.createElement("div"),n.id="snipcart",n.setAttribute("hidden","true"),document.body.appendChild(n));
+    h(n);
+
+    i||(i=document.createElement("script"),
+        i.src=window.SnipcartSettings.protocol+"://"+window.SnipcartSettings.domain+"/themes/v"+window.SnipcartSettings.version+"/default/snipcart.js",
+        i.async=!0,t.appendChild(i));
+
+    !e&&window.SnipcartSettings.loadCSS&&(
+      e=document.createElement("link"),e.rel="stylesheet",e.type="text/css",
+      e.href=window.SnipcartSettings.protocol+"://"+window.SnipcartSettings.domain+"/themes/v"+window.SnipcartSettings.version+"/default/snipcart.css",
+      t.prepend(e));
+
+    f.forEach(function(v){return document.removeEventListener(v,o)});
+  }
+
+  function h(t){
+    !y||(
+      t.dataset.apiKey=window.SnipcartSettings.publicApiKey,
+      window.SnipcartSettings.addProductBehavior&&(t.dataset.configAddProductBehavior=window.SnipcartSettings.addProductBehavior),
+      window.SnipcartSettings.modalStyle&&(t.dataset.configModalStyle=window.SnipcartSettings.modalStyle),
+      window.SnipcartSettings.currency&&(t.dataset.currency=window.SnipcartSettings.currency),
+      window.SnipcartSettings.templatesUrl&&(t.dataset.templatesUrl=window.SnipcartSettings.templatesUrl)
+    );
+  }
+})();
+
+// Conditional logic: disable Association dropdown unless "Pour une action/association" is selected
 (function () {
-  var DEFAULT_CONFIG = {
-    publicApiKey: 'YzNkN2VmYmUtNjZhMS00ODAyLTg1ODAtZjE4MDlmOGI5YzVlNjM5MDQxOTA1MjIzNzU4MTI1',
-    currency: 'eur',
-    modalStyle: 'side',
-    templatesUrl: 'https://sofient.github.io/e-commerce/snipcart-templates.html',
-    loadStrategy: 'on-user-interaction',
-    version: '3.0'
-  };
-
-  window.SnipcartSettings = window.SnipcartSettings || {};
-
-  Object.keys(DEFAULT_CONFIG).forEach(function (key) {
-    if (window.SnipcartSettings[key] === undefined || window.SnipcartSettings[key] === null) {
-      window.SnipcartSettings[key] = DEFAULT_CONFIG[key];
-    }
-  });
-
-  // Loader aligned with Snipcart's installation pattern.
-  (function bootstrapSnipcart() {
-    var settings = window.SnipcartSettings;
-    if (!settings.version) settings.version = '3.0';
-    if (!settings.timeoutDuration) settings.timeoutDuration = 2750;
-    if (!settings.domain) settings.domain = 'cdn.snipcart.com';
-    if (!settings.protocol) settings.protocol = 'https';
-    if (typeof settings.loadCSS === 'undefined') settings.loadCSS = true;
-
-    var usesLegacyDataAttributes =
-      settings.version.indexOf('v3.0.0-ci') !== -1 ||
-      (settings.version !== '3.0' &&
-        settings.version.localeCompare('3.4.0', undefined, {
-          numeric: true,
-          sensitivity: 'base'
-        }) === -1);
-
-    var events = ['focus', 'mouseover', 'touchmove', 'scroll', 'keydown'];
-    var hasLoaded = false;
-
-    window.LoadSnipcart = loadSnipcart;
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initLoadStrategy);
-    } else {
-      initLoadStrategy();
-    }
-
-    function initLoadStrategy() {
-      if (!settings.loadStrategy) {
-        loadSnipcart();
-        return;
-      }
-
-      if (settings.loadStrategy === 'on-user-interaction') {
-        events.forEach(function (eventName) {
-          document.addEventListener(eventName, loadSnipcart, { passive: true });
-        });
-        setTimeout(loadSnipcart, settings.timeoutDuration);
-        return;
-      }
-
-      if (settings.loadStrategy === 'manual') {
-        return;
-      }
-
-      loadSnipcart();
-    }
-
-    function loadSnipcart() {
-      if (hasLoaded) return;
-      hasLoaded = true;
-
-      var protocol = settings.protocol + '://';
-      var base = protocol + settings.domain;
-      var scriptPath = '/themes/v' + settings.version + '/default/snipcart.js';
-      var stylePath = '/themes/v' + settings.version + '/default/snipcart.css';
-
-      var head = document.head || document.getElementsByTagName('head')[0];
-      var snipcartNode = document.querySelector('#snipcart');
-      var scriptSelector = 'script[src="' + base + scriptPath + '"]';
-      var styleSelector = 'link[href="' + base + stylePath + '"]';
-      var scriptTag = document.querySelector(scriptSelector);
-      var styleTag = document.querySelector(styleSelector);
-
-      if (!snipcartNode) {
-        snipcartNode = document.createElement('div');
-        snipcartNode.id = 'snipcart';
-        snipcartNode.setAttribute('hidden', 'true');
-        document.body.appendChild(snipcartNode);
-      }
-
-      if (usesLegacyDataAttributes) {
-        snipcartNode.dataset.apiKey = settings.publicApiKey;
-
-        if (settings.addProductBehavior) {
-          snipcartNode.dataset.configAddProductBehavior = settings.addProductBehavior;
-        }
-
-        if (settings.modalStyle) {
-          snipcartNode.dataset.configModalStyle = settings.modalStyle;
-        }
-
-        if (settings.currency) {
-          snipcartNode.dataset.currency = settings.currency;
-        }
-
-        if (settings.templatesUrl) {
-          snipcartNode.dataset.templatesUrl = settings.templatesUrl;
-        }
-      }
-
-      if (!scriptTag) {
-        scriptTag = document.createElement('script');
-        scriptTag.src = base + scriptPath;
-        scriptTag.async = true;
-        head.appendChild(scriptTag);
-      }
-
-      if (!styleTag && settings.loadCSS) {
-        styleTag = document.createElement('link');
-        styleTag.rel = 'stylesheet';
-        styleTag.type = 'text/css';
-        styleTag.href = base + stylePath;
-        head.prepend(styleTag);
-      }
-
-      events.forEach(function (eventName) {
-        document.removeEventListener(eventName, loadSnipcart);
-      });
-    }
-  })();
-
-  // Conditional logic: Destination -> Association beneficiary.
   function initDestinationLogic() {
-    var destinationSelects = document.querySelectorAll(
+    var selects = document.querySelectorAll(
       'select[name*="Destination"], select[data-custom-field-name="Destination"]'
     );
 
-    destinationSelects.forEach(function (destinationSelect) {
+    selects.forEach(function (destinationSelect) {
       var container = destinationSelect.closest(
         '.snipcart-item-line, .snipcart-cart-item, [class*="item"]'
       );
@@ -147,30 +83,25 @@
       );
       if (!associationSelect) return;
 
-      function updateAssociationState() {
-        var normalizedValue = destinationSelect.value.toLowerCase();
-        var isDonation =
-          normalizedValue.indexOf('don') !== -1 || normalizedValue.indexOf('association') !== -1;
+      function update() {
+        var val = destinationSelect.value.toLowerCase();
+        var isDonation = val.indexOf('association') !== -1;
 
         associationSelect.disabled = !isDonation;
         associationSelect.style.opacity = isDonation ? '1' : '0.4';
         associationSelect.style.cursor = isDonation ? 'pointer' : 'not-allowed';
 
-        if (!isDonation) {
-          associationSelect.value = '';
-        }
+        if (!isDonation) associationSelect.value = '';
       }
 
-      updateAssociationState();
-      destinationSelect.addEventListener('change', updateAssociationState);
+      update();
+      destinationSelect.addEventListener('change', update);
     });
   }
 
   var observer = new MutationObserver(function (mutations) {
     mutations.forEach(function (mutation) {
-      if (mutation.addedNodes.length) {
-        initDestinationLogic();
-      }
+      if (mutation.addedNodes.length) initDestinationLogic();
     });
   });
 

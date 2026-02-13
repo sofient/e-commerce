@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Qui sommes-nous ? - Mahall E-boutique</title>
-    <meta name="description" content="Découvrez Mahall - Notre mission et nos valeurs">
+    <title>Procedure d'achat - Mahall E-boutique</title>
+    <meta name="description" content="Comment acheter un pack Mahall : pour soi ou pour une association.">
     <link rel="stylesheet" href="css/site.css">
     <style>
         .page-content {
@@ -16,11 +16,17 @@
             font-size: 3rem;
             font-weight: 700;
             letter-spacing: -0.02em;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             text-align: center;
         }
+        .page-intro {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+        }
         .page-content h2 {
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: 600;
             margin: 2.5rem 0 1rem;
             letter-spacing: -0.01em;
@@ -31,31 +37,80 @@
             color: var(--text-muted);
             margin-bottom: 1.5rem;
         }
-        .values-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin: 3rem 0;
-        }
-        .value-card {
+        .procedure-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
             background: var(--card-bg);
-            padding: 2rem;
             border-radius: var(--radius-lg);
+            overflow: hidden;
             box-shadow: var(--shadow-sm);
-            text-align: center;
         }
-        .value-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-        .value-card h3 {
-            font-size: 1.3rem;
+        .procedure-table th {
+            background: var(--text-main);
+            color: white;
+            padding: 1rem 1.5rem;
+            text-align: left;
+            font-size: 1rem;
             font-weight: 600;
-            margin-bottom: 0.75rem;
         }
-        .value-card p {
+        .procedure-table td {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
             font-size: 0.95rem;
             color: var(--text-muted);
+            line-height: 1.6;
+        }
+        .procedure-table tr:last-child td {
+            border-bottom: none;
+        }
+        .procedure-table tr:hover td {
+            background: rgba(0, 113, 227, 0.03);
+        }
+        .option-label {
+            font-weight: 600;
+            color: var(--text-main);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        .steps-list {
+            margin: 2rem 0;
+            padding: 0;
+            list-style: none;
+            counter-reset: step;
+        }
+        .steps-list li {
+            counter-increment: step;
+            padding: 1.25rem 1.5rem 1.25rem 4rem;
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            margin-bottom: 0.75rem;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            font-size: 1rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+        .steps-list li::before {
+            content: counter(step);
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 28px;
+            height: 28px;
+            background: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        @media (max-width: 768px) {
+            .page-content h1 { font-size: 2rem; }
+            .procedure-table th, .procedure-table td { padding: 0.75rem 1rem; font-size: 0.9rem; }
         }
     </style>
 </head>
@@ -67,8 +122,8 @@
     </div>
     <nav class="nav-menu">
       <a href="index.html" class="nav-link">Accueil</a>
-      <a href="index.html#products" class="nav-link">Produits</a>
-      <a href="about.html" class="nav-link">Qui sommes-nous ?</a>
+      <a href="produits.html" class="nav-link">Produits</a>
+      <a href="about.html" class="nav-link">Procedure d'achat</a>
       <a href="faq.html" class="nav-link">F.A.Q.</a>
     </nav>
     <a class="snipcart-checkout">
@@ -78,65 +133,60 @@
   </header>
 
   <div class="page-content">
-    <h1>Qui sommes-nous ?</h1>
+    <h1>Procedure d'achat</h1>
+    <p class="page-intro">Comment commander votre pack et choisir sa destination</p>
 
-    <p style="text-align: center; font-size: 1.3rem; margin-bottom: 3rem;">
-      Mahall est une initiative solidaire qui propose des packs et coffrets soigneusement sélectionnés pour partager et offrir.
-    </p>
+    <h2>Les deux options d'achat</h2>
+    <p>Chaque pack peut etre achete selon deux options. Lors de l'ajout au panier, vous selectionnez le champ <strong>"Destination"</strong> :</p>
 
-    <h2>Notre Mission</h2>
-    <p>
-      Chez Mahall, nous croyons que chaque geste compte. Notre mission est de proposer des produits de qualité
-      Les bénéfices serviront au <strong>remboursement des dettes et à la rénovation du bâtiment</strong>.
-    </p>
+    <table class="procedure-table">
+        <thead>
+            <tr>
+                <th>Option</th>
+                <th>Description</th>
+                <th>Champ "Association"</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <span class="option-label">Pour moi</span>
+                    Achat personnel
+                </td>
+                <td>Le pack est pour vous ou pour offrir a un proche. Vous le recevrez directement a votre adresse de livraison.</td>
+                <td>Non applicable — le champ association reste desactive.</td>
+            </tr>
+            <tr>
+                <td>
+                    <span class="option-label">Pour une action / association</span>
+                    Don solidaire
+                </td>
+                <td>Le pack sera offert a une personne dans le besoin via l'association que vous selectionnez. Le pack ne vous sera pas envoye personnellement.</td>
+                <td>Vous choisissez l'association beneficiaire dans la liste deroulante (Secours Islamique France, Secours Populaire, Restos du Coeur, Croissant Rouge, Muslim Hands, Islamic Relief, Life ONG, Barakacity, Human Appeal, Autre association locale).</td>
+            </tr>
+        </tbody>
+    </table>
 
-    <p>
-      Nos packs sont conçus avec soin pour offrir une expérience mémorable, que ce soit pour faire plaisir à un enfant,
-      célébrer une occasion spéciale, ou simplement partager un moment de joie avec vos proches.
-    </p>
-
-    <h2>Nos Valeurs</h2>
-
-    <div class="values-grid">
-      <div class="value-card">
-        <div class="value-icon">🤝</div>
-        <h3>Solidarité</h3>
-        <p>Les bénéfices servent au remboursement des dettes et à la rénovation</p>
-      </div>
-
-      <div class="value-card">
-        <div class="value-icon">✨</div>
-        <h3>Qualité</h3>
-        <p>Sélection rigoureuse de produits et d'articles soigneusement choisis</p>
-      </div>
-
-      <div class="value-card">
-        <div class="value-icon">🎁</div>
-        <h3>Générosité</h3>
-        <p>Des coffrets pensés pour partager et offrir avec le cœur</p>
-      </div>
-    </div>
-
-    <h2>Notre Engagement</h2>
-    <p>
-      Chaque pack que nous proposons est une édition limitée, garantissant l'exclusivité et la rareté de nos produits.
-      Nous travaillons avec des partenaires de confiance pour vous offrir des articles de qualité, tout en respectant
-      nos valeurs éthiques et solidaires.
-    </p>
-
-    <p>
-      En choisissant Mahall, vous ne faites pas qu'un achat - vous participez à un mouvement de partage et de solidarité.
-    </p>
+    <h2>Etapes de commande</h2>
+    <ol class="steps-list">
+        <li>Parcourez le <a href="produits.html" style="color: var(--accent-color); font-weight: 500;">catalogue des packs</a> et choisissez vos articles.</li>
+        <li>Pour chaque pack, selectionnez la <strong>Destination</strong> : "Pour moi" ou "Pour une action/association".</li>
+        <li>Si vous choisissez une association, selectionnez-la dans le menu deroulant.</li>
+        <li>Cliquez sur <strong>"Ajouter au panier"</strong>.</li>
+        <li>Ouvrez votre panier et cliquez sur <strong>"Commander"</strong>.</li>
+        <li>Remplissez vos informations de livraison et de paiement.</li>
+        <li>Vous recevrez un <strong>email de confirmation</strong> avec les modalites pratiques.</li>
+    </ol>
 
     <div style="text-align: center; margin: 4rem 0;">
-      <a href="index.html" class="btn-buy" style="display: inline-block; width: auto; padding: 12px 40px;">
-        Découvrir nos packs
+      <a href="produits.html" class="btn-buy" style="display: inline-block; width: auto; padding: 12px 40px;">
+        Voir le catalogue
       </a>
     </div>
   </div>
 
   <footer>
-    <p>&copy; 2026 Mahall - E-boutique. <a href="privacy.html">Politique de Confidentialité</a></p>
+    <p>&copy; 2026 Mahall - E-boutique. <a href="privacy.html">Politique de Confidentialite</a></p>
   </footer>
 
     <script src="js/snipcart-init.js"></script>
